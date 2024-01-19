@@ -6,7 +6,7 @@ export const useProduct = () => {
 
     const dispatch = useDispatch();
     const addProductAction = (product) => dispatch(addProduct(product));
-    const removeProductAction = () => dispatch(removeProduct());
+    const removeProductAction = (id) => dispatch(removeProduct(id));
 
     return {
         product,

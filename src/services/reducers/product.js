@@ -31,8 +31,8 @@ export const productSlice = createSlice({
         ...action.payload,
       });
     },
-    removeProduct: (state) => {
-      state.value.pop();
+    removeProduct: (state, action) => {
+      state.value = state.value.filter(it => it.id !== action.payload)
     },
   },
 });

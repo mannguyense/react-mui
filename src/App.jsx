@@ -3,13 +3,15 @@ import './App.css'
 import APP_ROUTES from './routes'
 import GuardedRoute from './components/Auth/GuardRoute'
 import { NavBar } from './ui'
+import { CssBaseline } from '@mui/material'
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <div className='body'>
-          <NavBar/>
+          {/* <NavBar/> */}
+          <CssBaseline/>
           <Routes>
             {
               APP_ROUTES.map((route) => (

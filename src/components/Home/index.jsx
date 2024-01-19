@@ -14,14 +14,20 @@ import {
   Typography,
   DialogActions,
   Button,
+  FormGroup,
+  FormLabel,
+  FormControl,
+  TextField,
 } from "@mui/material";
 import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { useProduct } from "../../hooks";
+import { useFormik } from "formik";
 
 export default function Home() {
   const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState(false);
+  const [isOpenAddDialog, setIsOpenAddDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { product, actions } = useProduct();
   const navigate = useNavigate();
@@ -36,9 +42,30 @@ export default function Home() {
     actions.removeProduct(selectedProduct.id);
   };
 
+  const addForm = useFormik({
+    initialValues: {
+      name: "",
+      description: "",
+      price: 0,
+    },
+    onSubmit: (values) => {
+      actions.addProduct(values);
+    },
+  });
+
   return (
     <Container>
       <h1>Home</h1>
+      <Button
+        color="primary"
+        variant="contained"
+        sx={{
+          mb: 4,
+        }}
+        onClick={() => setIsOpenAddDialog(true)}
+      >
+        Add product
+      </Button>
       {product && (
         <TableContainer component={Paper}>
           <Table>
@@ -99,7 +126,7 @@ export default function Home() {
           <Typography
             sx={{
               color: "red",
-              fontSize: 20
+              fontSize: 20,
             }}
           >
             Delete
@@ -107,7 +134,8 @@ export default function Home() {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete {selectedProduct?.name} product? this action is irreversible.
+            Are you sure you want to delete {selectedProduct?.name} product?
+            this action is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -115,6 +143,53 @@ export default function Home() {
           <Button onClick={() => deleteProduct()} autoFocus>
             Delete
           </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={isOpenAddDialog} onClose={() => setIsOpenAddDialog(false)}>
+        <DialogTitle>
+          <Typography
+            sx={{
+              fontSize: 20,
+            }}
+          >
+            Add
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <form onSubmit={addForm.handleSubmit}>
+            <FormGroup>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <TextField
+                  type="text"
+                  value={addForm.values.name}
+                  onChange={addForm.handleChange}
+                ></TextField>
+              </FormControl>
+              <br />
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <TextField
+                  type="text"
+                  value={addForm.values.description}
+                  onChange={addForm.handleChange}
+                ></TextField>
+              </FormControl>
+              <br />
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <TextField
+                  type="number"
+                  value={addForm.values.price}
+                  onChange={addForm.handleChange}
+                ></TextField>
+              </FormControl>
+            </FormGroup>
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsOpenAddDialog(false)}>Cancel</Button>
+          <Button autoFocus>Confirm</Button>
         </DialogActions>
       </Dialog>
     </Container>

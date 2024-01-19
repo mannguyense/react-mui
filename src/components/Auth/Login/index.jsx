@@ -1,17 +1,18 @@
 import {
   Button,
   Container,
-  CssBaseline,
   FormControl,
+  FormGroup,
   FormLabel,
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { FormGroup } from "@mui/material";
 import { useAuth } from "../../../hooks";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { actions } = useAuth();
+  const navigate = useNavigate();
 
   const form = useFormik({
     initialValues: {
@@ -19,20 +20,29 @@ export default function Login() {
       password: "",
     },
     onSubmit: (values) => {
+      // TODO: Call api to verify username and password
+      const { email, password } = values;
+
+      if (email === "admin@mail.com" && password === "admin") {
         actions.setUser(values);
+
+        navigate('/');
+      } else {
+        alert("Invalid username or password");
+      }
     },
   });
 
   return (
     <>
-      <CssBaseline />
       <Container>
         <h1>Login</h1>
         <form onSubmit={form.handleSubmit}>
           <FormGroup>
-            <FormLabel>Username</FormLabel>
+            <FormLabel>Email</FormLabel>
             <FormControl>
               <TextField
+                type="email"
                 name="email"
                 value={form.values.email}
                 onChange={form.handleChange}
